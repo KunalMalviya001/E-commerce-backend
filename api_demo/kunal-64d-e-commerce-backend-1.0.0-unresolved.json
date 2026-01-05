@@ -1,0 +1,608 @@
+{
+  "openapi" : "3.0.3",
+  "info" : {
+    "title" : "E-commerce-BACKEND",
+    "version" : "1.0.0",
+    "contact" : { }
+  },
+  "servers" : [ {
+    "url" : "http://localhost"
+  } ],
+  "paths" : {
+    "/product/delete" : {
+      "delete" : {
+        "tags" : [ "Product" ],
+        "summary" : "Delete Product",
+        "description" : "Delete Product",
+        "operationId" : "deleteProduct",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "product_id" : {
+                    "type" : "number",
+                    "example" : 7
+                  }
+                }
+              },
+              "examples" : {
+                "Delete Product" : {
+                  "value" : {
+                    "product_id" : 7
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : ""
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ ]
+        } ]
+      }
+    },
+    "/product/create" : {
+      "post" : {
+        "tags" : [ "Product" ],
+        "summary" : "For Add Product",
+        "description" : "For Add Product",
+        "operationId" : "forAddProduct",
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "file" : {
+                    "type" : "string",
+                    "format" : "binary"
+                  },
+                  "product_category" : {
+                    "type" : "string",
+                    "example" : "Electronic"
+                  },
+                  "product_id" : {
+                    "type" : "string",
+                    "example" : "7"
+                  },
+                  "product_name" : {
+                    "type" : "string",
+                    "example" : "laptop"
+                  },
+                  "product_price" : {
+                    "type" : "string",
+                    "example" : "400000"
+                  },
+                  "product_stock" : {
+                    "type" : "string",
+                    "example" : "400"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : ""
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ ]
+        } ]
+      }
+    },
+    "/product/" : {
+      "get" : {
+        "tags" : [ "Product" ],
+        "summary" : "Get Category Product",
+        "description" : "Get Category Product",
+        "operationId" : "getCategoryProduct",
+        "parameters" : [ {
+          "name" : "category",
+          "in" : "query",
+          "schema" : {
+            "type" : "string",
+            "example" : "Electronic"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : ""
+          }
+        }
+      }
+    },
+    "/product/update" : {
+      "put" : {
+        "tags" : [ "Product" ],
+        "summary" : "Update Product",
+        "description" : "Update Product",
+        "operationId" : "updateProduct",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "product_id" : {
+                    "type" : "number",
+                    "example" : 1
+                  },
+                  "product_name" : {
+                    "type" : "string",
+                    "example" : "lenovo Laptop"
+                  }
+                }
+              },
+              "examples" : {
+                "Update Product" : {
+                  "value" : {
+                    "product_id" : 1,
+                    "product_name" : "lenovo Laptop"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : ""
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ ]
+        } ]
+      }
+    },
+    "/user/login" : {
+      "post" : {
+        "tags" : [ "User" ],
+        "summary" : "User Login",
+        "description" : "User Login",
+        "operationId" : "userLogin",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "user_email" : {
+                    "type" : "string",
+                    "example" : "tapan@gmail.com"
+                  },
+                  "user_password" : {
+                    "type" : "string",
+                    "example" : "tapan@123"
+                  }
+                }
+              },
+              "examples" : {
+                "User Login" : {
+                  "value" : {
+                    "user_email" : "tapan@gmail.com",
+                    "user_password" : "tapan@123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : ""
+          }
+        },
+        "security" : [ { } ]
+      }
+    },
+    "/user/refresh" : {
+      "post" : {
+        "tags" : [ "User" ],
+        "summary" : "Refresh Token",
+        "description" : "Refresh Token",
+        "operationId" : "refreshToken",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "refresh_token" : {
+                    "type" : "string",
+                    "example" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0YXBhbkBnbWFpbC5jb20iLCJpYXQiOjE3Njc1OTg3MDAsImV4cCI6MTc2ODIwMzUwMH0.DmiLcaPKc4aaPcRlLoxcKNgTBmKa6qwarSrk3t3Bhqg"
+                  }
+                }
+              },
+              "examples" : {
+                "Refresh Token" : {
+                  "value" : {
+                    "refresh_token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0YXBhbkBnbWFpbC5jb20iLCJpYXQiOjE3Njc1OTg3MDAsImV4cCI6MTc2ODIwMzUwMH0.DmiLcaPKc4aaPcRlLoxcKNgTBmKa6qwarSrk3t3Bhqg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : ""
+          }
+        },
+        "security" : [ { } ]
+      }
+    },
+    "/user/logout" : {
+      "post" : {
+        "tags" : [ "User" ],
+        "summary" : "User Logout",
+        "description" : "User Logout",
+        "operationId" : "userLogout",
+        "responses" : {
+          "200" : {
+            "description" : ""
+          }
+        },
+        "security" : [ { } ]
+      }
+    },
+    "/user/registerUser" : {
+      "post" : {
+        "tags" : [ "User" ],
+        "summary" : "User Register",
+        "description" : "User Register",
+        "operationId" : "userRegister",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "roles" : {
+                    "type" : "string",
+                    "example" : "admin"
+                  },
+                  "user_email" : {
+                    "type" : "string",
+                    "example" : "tapan@gmail.com"
+                  },
+                  "user_password" : {
+                    "type" : "string",
+                    "example" : "tapan@123"
+                  }
+                }
+              },
+              "examples" : {
+                "User Register" : {
+                  "value" : {
+                    "roles" : "admin",
+                    "user_email" : "tapan@gmail.com",
+                    "user_password" : "tapan@123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : ""
+          }
+        },
+        "security" : [ { } ]
+      }
+    },
+    "/user/updateUser" : {
+      "put" : {
+        "tags" : [ "User" ],
+        "summary" : "User Update",
+        "description" : "User Update",
+        "operationId" : "userUpdate",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "user_email" : {
+                    "type" : "string",
+                    "example" : "tapan@gmail.com"
+                  },
+                  "user_name" : {
+                    "type" : "string",
+                    "example" : "tapan"
+                  }
+                }
+              },
+              "examples" : {
+                "User Update" : {
+                  "value" : {
+                    "user_email" : "tapan@gmail.com",
+                    "user_name" : "tapan"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : ""
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ ]
+        } ]
+      }
+    },
+    "/user/" : {
+      "get" : {
+        "tags" : [ "User" ],
+        "summary" : "get user detail",
+        "description" : "get user detail",
+        "operationId" : "getUserDetail",
+        "parameters" : [ {
+          "name" : "user_email",
+          "in" : "query",
+          "schema" : {
+            "type" : "string",
+            "example" : "tapan@gmail.com"
+          }
+        }, {
+          "name" : "roles",
+          "in" : "query",
+          "schema" : {
+            "type" : "string",
+            "example" : "admin"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : ""
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ ]
+        } ]
+      }
+    },
+    "/user/deleteUser/" : {
+      "delete" : {
+        "tags" : [ "User" ],
+        "summary" : "User Delete",
+        "description" : "User Delete",
+        "operationId" : "userDelete",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "user_email" : {
+                    "type" : "string",
+                    "example" : "tapan@gmail.com"
+                  }
+                }
+              },
+              "examples" : {
+                "User Delete" : {
+                  "value" : {
+                    "user_email" : "tapan@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : ""
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ ]
+        } ]
+      }
+    },
+    "/order/view" : {
+      "get" : {
+        "tags" : [ "Order" ],
+        "summary" : "View Order",
+        "description" : "View Order",
+        "operationId" : "viewOrder",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "order" : {
+                    "type" : "string",
+                    "example" : "6956513c3c6841499cc287a7"
+                  },
+                  "user_email" : {
+                    "type" : "string",
+                    "example" : "tapan@gmail.com"
+                  }
+                }
+              },
+              "examples" : {
+                "View Order" : {
+                  "value" : {
+                    "order" : "6956513c3c6841499cc287a7",
+                    "user_email" : "tapan@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : ""
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ ]
+        } ]
+      }
+    },
+    "/order/create" : {
+      "post" : {
+        "tags" : [ "Order" ],
+        "summary" : "Create Order",
+        "description" : "Create Order",
+        "operationId" : "createOrder",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "order" : {
+                    "type" : "string",
+                    "example" : "6956513c3c6841499cc287a7"
+                  },
+                  "user_email" : {
+                    "type" : "string",
+                    "example" : "tapan@gmail.com"
+                  }
+                }
+              },
+              "examples" : {
+                "Create Order" : {
+                  "value" : {
+                    "order" : "6956513c3c6841499cc287a7",
+                    "user_email" : "tapan@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : ""
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ ]
+        } ]
+      }
+    },
+    "/order/update" : {
+      "put" : {
+        "tags" : [ "Order" ],
+        "summary" : "update order",
+        "description" : "update order",
+        "operationId" : "updateOrder",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "order" : {
+                    "type" : "string",
+                    "example" : "6956513c3c6841499cc287a7"
+                  },
+                  "user_email" : {
+                    "type" : "string",
+                    "example" : "tapan@gmail.com"
+                  }
+                }
+              },
+              "examples" : {
+                "update order" : {
+                  "value" : {
+                    "order" : "6956513c3c6841499cc287a7",
+                    "user_email" : "tapan@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : ""
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ ]
+        } ]
+      }
+    },
+    "/order/delete" : {
+      "delete" : {
+        "tags" : [ "Order" ],
+        "summary" : "Delete Order",
+        "description" : "Delete Order",
+        "operationId" : "deleteOrder",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "order" : {
+                    "type" : "string",
+                    "example" : "6956513c3c6841499cc287a7"
+                  },
+                  "user_email" : {
+                    "type" : "string",
+                    "example" : "tapan@gmail.com"
+                  }
+                }
+              },
+              "examples" : {
+                "Delete Order" : {
+                  "value" : {
+                    "order" : "6956513c3c6841499cc287a7",
+                    "user_email" : "tapan@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : ""
+          }
+        },
+        "security" : [ {
+          "oauth2" : [ ]
+        } ]
+      }
+    }
+  },
+  "components" : {
+    "securitySchemes" : {
+      "oauth2" : {
+        "type" : "oauth2",
+        "flows" : {
+          "authorizationCode" : {
+            "authorizationUrl" : "",
+            "tokenUrl" : "",
+            "scopes" : { }
+          }
+        }
+      }
+    }
+  },
+  "tags" : [ {
+    "name" : "Product"
+  }, {
+    "name" : "User"
+  }, {
+    "name" : "Order"
+  } ]
+}
