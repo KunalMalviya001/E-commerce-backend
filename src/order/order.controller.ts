@@ -16,7 +16,7 @@ import { AddOrderDto } from './dto/add.order.dto';
 import { GetOrderDto } from './dto/get.order.dto';
 
 @ApiBearerAuth('access-token')
-@ApiTags('Product')
+@ApiTags('Order')
 @Controller('order')
 export class OrderController {
   constructor(
