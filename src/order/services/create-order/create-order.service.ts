@@ -17,15 +17,16 @@ export class CreateOrderService {
   ) {}
 
   // For Create Order
-  async createOrder(
-    user_email: string,
-    order: CreateOrderInterface,
-  ): Promise<string> {
+  async createOrder(orders: CreateOrderInterface): Promise<string> {
     // Find user by email
-    const user = await this.userModel.findOne({ user_email: user_email });
+    const user = await this.userModel.findOne({
+      user_email: orders.user_email,
+    });
 
     if (!user) {
-      throw new NotFoundException(`User with email ${user_email} not found`);
+      throw new NotFoundException(
+        `User with email ${orders.user_email} not found`,
+      );
     }
     // Find user by email
     const existingOrder = await this.orderModel.findOne({
@@ -35,7 +36,7 @@ export class CreateOrderService {
       // Create order with proper data
       const newOrder = await this.orderModel.insertMany({
         user: user._id,
-        items: [order],
+        items: [orders.items],
       });
       if (!newOrder) {
         throw new BadRequestException('Failed to place order');

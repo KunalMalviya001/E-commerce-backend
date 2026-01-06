@@ -13,7 +13,7 @@ export class GetSortedProductService {
   // For Get Product Based on Category
   async getCategoryProduct(category: string): Promise<ProductInterface[]> {
     const categoryProduct: ProductInterface[] = await this.productModel.find({
-      product_category: new RegExp(`^${category}$`, 'i'),
+      product_category: new RegExp(`^${category}s?$`, 'i'),
     });
     if (!categoryProduct || categoryProduct.length == 0) {
       throw new NotFoundException(`Product ${category} not found`);

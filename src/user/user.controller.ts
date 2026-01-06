@@ -141,14 +141,17 @@ export class UserController {
   }) // Document the response
   @Public()
   @Post('refresh')
-  async refresh(@Body('refresh_token') refresh_token: string) {
-    if (!refresh_token) {
+  async refresh(@Body('refresh_token') refresh_token: RefreshUserDto) {
+    if (!refresh_token.refresh_token) {
       throw new UnauthorizedException();
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const payload = await this.jwtService.verifyAsync(refresh_token, {
-      secret: process.env.JWT_REFRESH_SECRET,
-    });
+    const payload = await this.jwtService.verifyAsync(
+      refresh_token.refresh_token,
+      {
+        secret: process.env.JWT_REFRESH_SECRET,
+      },
+    );
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     const user = await this.userService.findUser(payload.sub);
     if (!user || !user.refresh_token) {
@@ -156,7 +159,10 @@ export class UserController {
     }
     // console.log(refresh_token);
 
-    const isValid = await bcrypt.compare(refresh_token, user.refresh_token);
+    const isValid = await bcrypt.compare(
+      refresh_token.refresh_token,
+      user.refresh_token,
+    );
 
     if (!isValid) {
       throw new UnauthorizedException();

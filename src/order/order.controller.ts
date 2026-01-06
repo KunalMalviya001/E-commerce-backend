@@ -1,5 +1,4 @@
 import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
-import * as createOrderInterface from './interface/create-order.interface';
 // import { Public } from '../common/decorators/skip.auth';
 import { GetOrderInterface } from './interface/get-order.interface';
 import { CreateOrderService } from './services/create-order/create-order.service';
@@ -28,11 +27,8 @@ export class OrderController {
     type: [AddOrderDto],
   }) // Document the response
   @Post('add')
-  async createOreder(
-    @Body('user_email') user_email: string,
-    @Body('order') order: createOrderInterface.CreateOrderInterface,
-  ): Promise<string | Error> {
-    return this.createOrderService.createOrder(user_email, order);
+  async createOreder(@Body() orders: AddOrderDto): Promise<string | Error> {
+    return this.createOrderService.createOrder(orders);
   }
 
   // // @Public()
@@ -62,10 +58,9 @@ export class OrderController {
   }) // Document the response
   @Delete('delete')
   async deleteOreder(
-    @Body('user_email') user_email: string,
-    @Body('order') order: createOrderInterface.CreateOrderInterface,
+    @Body('user_email') orders: DeleteOrderDto,
   ): Promise<string | Error> {
-    return this.deleteOrderService.deleteOrder(user_email, order);
+    return this.deleteOrderService.deleteOrder(orders);
   }
 
   //   for view Order
@@ -78,8 +73,8 @@ export class OrderController {
   }) // Document the response
   @Get('view')
   async getOreder(
-    @Body('user_email') user_email: string,
+    @Body('user_email') user_email: GetOrderDto,
   ): Promise<GetOrderInterface | Error | string> {
-    return this.getOrderService.viewOrder(user_email);
+    return this.getOrderService.viewOrder(user_email.user_email);
   }
 }
