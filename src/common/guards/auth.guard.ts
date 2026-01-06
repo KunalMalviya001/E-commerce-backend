@@ -6,50 +6,51 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import dotenv from 'dotenv';
-import { IS_PUBLIC_KEY } from '../decorators/skip.auth';
 import { Reflector } from '@nestjs/core';
-dotenv.config();
+import { IS_PUBLIC_KEY } from '../decorators/skip.auth';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    private jwtService: JwtService,
-    private reflector: Reflector,
+    private readonly jwtService: JwtService,
+    private readonly reflector: Reflector,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    // ✅ Skip auth for public routes
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
-    if (isPublic) {
-      // 💡 See this condition
-      return true;
+    if (isPublic) return true;
+
+    const request = context.switchToHttp().getRequest<Request>();
+    const token = this.extractToken(request);
+
+    if (!token) {
+      throw new UnauthorizedException('Missing bearer token');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const request = context.switchToHttp().getRequest();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const token = this.extractTokenFromHeader(request);
-    if (!token) {
-      throw new UnauthorizedException();
-    }
     try {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_ACCESS_SECRET,
       });
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+
+      // Attach user payload to request
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       request['user'] = payload;
+      return true;
     } catch {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid or expired token');
     }
-    return true;
   }
 
-  private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
+  private extractToken(request: Request): string | null {
+    const authHeader = request.headers.authorization;
+    if (!authHeader) return null;
+
+    const [type, token] = authHeader.split(' ');
+    return type === 'Bearer' && token ? token : null;
   }
 }
