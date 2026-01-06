@@ -10,7 +10,7 @@ export class DeleteOrderDto {
 
   @ApiProperty({
     description: 'Enter Product ObjectID',
-    example: '"6956513c3c6841499cc287a7"',
+    example: '6956513c3c6841499cc287a7',
   })
   items: Product[];
 }
