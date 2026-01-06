@@ -11,6 +11,17 @@ async function bootstrap() {
     .setDescription('The E-commerce API description')
     .setVersion('1.0')
     .addTag('app')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'access-token', // This name here is important, it's used to link to the decorator
+    )
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
