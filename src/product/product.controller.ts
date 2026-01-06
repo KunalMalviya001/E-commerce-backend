@@ -13,8 +13,6 @@ import {
 } from '@nestjs/common';
 import { ProductInterface } from './interfaces/product.interface';
 import { Product } from './schema/product.schema';
-import type { ProductUpdateInterface } from './interfaces/productsUpdate.interface';
-import type { ProductDeleteInterface } from './interfaces/productsDelete.interface';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -28,7 +26,7 @@ import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '../common/enum/role.enum';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { DeleteOrderDto } from '../order/dto/delete.order.dto';
+import { DeleteProductDto } from './dto/delete-product.dto';
 
 @Controller('product')
 export class ProductController {
@@ -118,7 +116,7 @@ export class ProductController {
   @Roles(Role.admin)
   @Put('update')
   async updateProductContoller(
-    @Body() product: ProductUpdateInterface,
+    @Body() product: UpdateProductDto,
   ): Promise<string> {
     return this.updateProductService.updateProduct(product);
   }
@@ -129,12 +127,12 @@ export class ProductController {
   @ApiResponse({
     status: 200,
     description: 'Delete Product Only For role = "admin" ',
-    type: [DeleteOrderDto],
+    type: [DeleteProductDto],
   }) // Document the response
   @Roles(Role.admin)
   @Delete('delete')
   async deleteProductController(
-    @Query() product: ProductDeleteInterface,
+    @Query() product: DeleteProductDto,
   ): Promise<string> {
     return this.deleteProductService.deleteProduct(product);
   }

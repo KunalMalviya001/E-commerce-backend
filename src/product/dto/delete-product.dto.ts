@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateProductDto {
+export class DeleteProductDto {
   @ApiProperty({
     description: 'Enter Product ID Unique',
     example: '1',
