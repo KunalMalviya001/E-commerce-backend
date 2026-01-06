@@ -7,7 +7,6 @@ import {
   Delete,
   UploadedFile,
   UseInterceptors,
-  ValidationPipe,
   Put,
   ConflictException,
 } from '@nestjs/common';
@@ -26,6 +25,7 @@ import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '../common/enum/role.enum';
 import {
   ApiBearerAuth,
+  ApiConsumes,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -84,41 +84,40 @@ export class ProductController {
 
   // For Add new Product
   // @Public()
-
-  @ApiOperation({ summary: 'Add Product' }) // Operation description
+  @ApiOperation({ summary: 'Add Product' })
+  @ApiBearerAuth('access-token')
+  @ApiConsumes('multipart/form-data')
   @ApiResponse({
-    status: 200,
-    description: 'Add Product Only For role = "admin" ',
-    type: [CreateProductDto],
-  }) // Document the response
+    status: 201,
+    description: 'Product added successfully',
+  })
   @Roles(Role.admin)
   @Post('create')
   @UseInterceptors(FileInterceptor('product_images'))
   async addNewProduct(
-    @Body(new ValidationPipe()) product: CreateProductDto,
-    @UploadedFile() file: Express.Multer.File,
-  ): Promise<string> {
-    try {
-      if (file) {
-        const uploadImage = await this.cloudinaryService.uploadImage(file);
+    @Body() product: CreateProductDto,
+    @UploadedFile() file?: Express.Multer.File,
+  ): Promise<{ message: string }> {
+    const products = product as ProductInterface;
 
-        product.product_images = uploadImage?.secure_url
-          ? [uploadImage.secure_url]
-          : [];
+    if (file) {
+      const uploadImage = await this.cloudinaryService.uploadImage(file);
+
+      if (!uploadImage?.secure_url) {
+        throw new ConflictException('Image upload failed');
       }
-      if (!product.product_images) {
-        throw new ConflictException('Product creation failed');
-      }
-      const addProduct = await this.createProductService.addProduct(
-        product as ProductInterface,
-      );
-      if (addProduct.length > 0) {
-        return 'product Added';
-      }
-      return 'product Not Add';
-    } catch {
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      products.product_images = [uploadImage.secure_url];
+    }
+
+    const createdProduct = await this.createProductService.addProduct(products);
+
+    if (!createdProduct) {
       throw new ConflictException('Product creation failed');
     }
+
+    return { message: 'Product added successfully' };
   }
 
   // For Updating Product

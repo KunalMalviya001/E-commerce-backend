@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateProductDto {
   @ApiProperty({
     description: 'Enter Product ID Unique',
-    example: '1',
+    example: 1,
   })
   product_id: number;
 
@@ -27,19 +27,22 @@ export class CreateProductDto {
 
   @ApiProperty({
     description: 'Enter Product Price',
-    example: '100000',
+    example: 100000,
   })
   product_price: number;
 
   @ApiProperty({
     description: 'Enter Product Stock',
-    example: '10',
+    example: 10,
   })
   product_stock: number;
 
+  // 👇 IMPORTANT FOR FILE UPLOAD IN SWAGGER
   @ApiProperty({
-    description: 'Enter Product images',
-    example: 'Files',
+    description: 'Upload Product Image',
+    type: 'string',
+    format: 'binary',
+    required: false,
   })
-  product_images?: string[];
+  product_images?: any;
 }
