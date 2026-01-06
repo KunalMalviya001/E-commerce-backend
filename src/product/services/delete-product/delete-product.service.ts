@@ -12,7 +12,11 @@ export class DeleteProductService {
 
   // For Deleting Product
   async deleteProduct(product: ProductDeleteInterface): Promise<string> {
-    if (await this.productModel.findOneAndDelete(product)) {
+    if (
+      await this.productModel.findOneAndDelete({
+        product_id: product.product_id,
+      })
+    ) {
       return 'One Product Dlete';
     }
     return 'No Deletion Happen';

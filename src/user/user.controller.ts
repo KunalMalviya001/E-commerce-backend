@@ -27,7 +27,12 @@ import { GetUserInterface } from './interface/getUser.interface';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 import { AuthService } from './services/refresh-token/auth.service';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { GetUserDto } from './dto/get-user.dto';
+import { DeleteUserDto } from './dto/delete.user.dto';
+import { RefreshUserDto } from './dto/refreshToken.dto';
 
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(
@@ -42,6 +47,12 @@ export class UserController {
   ) {}
 
   // For login
+  @ApiOperation({ summary: 'For Login User' }) // Operation description
+  @ApiResponse({
+    status: 200,
+    description: 'Login user',
+    type: [LoginUserDto],
+  }) // Document the response
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
@@ -50,6 +61,11 @@ export class UserController {
   }
 
   // For LogOut
+  @ApiOperation({ summary: 'For Logout User' }) // Operation description
+  @ApiResponse({
+    status: 200,
+    description: 'Logout user',
+  }) // Document the response
   @Post('logout')
   async logout(@Req() req) {
     await this.userService.updateUser({
@@ -61,19 +77,40 @@ export class UserController {
   }
 
   // for Register
+  @ApiOperation({ summary: 'For Register User' }) // Operation description
+  @ApiResponse({
+    status: 200,
+    description: 'Register user',
+    type: [LoginUserDto],
+  }) // Document the response
   @Public()
   @Post('registerUser')
   async register(@Body() registerUserDto: RegisterUserDto) {
     return await this.registerService.registerUser(registerUserDto);
   }
 
+  // For Update
+
+  @ApiOperation({ summary: 'For Update User' }) // Operation description
+  @ApiResponse({
+    status: 200,
+    description: 'Update user',
+    type: [UpdateUserDto],
+  }) // Document the response
   @Put('updateUser')
   async updateUser(@Body() updateUserDto: UpdateUserDto) {
     return await this.updteService.updateUser(updateUserDto);
   }
 
+  // For Get User
+
+  @ApiOperation({ summary: 'For Get User Detail' }) // Operation description
+  @ApiResponse({
+    status: 200,
+    description: 'Get user Detail',
+    type: [GetUserDto],
+  }) // Document the response
   @Get()
-  // @Public()
   @Roles(Role.admin)
   async getUserDetail(
     @Query('user_email') user_email: string,
@@ -81,7 +118,13 @@ export class UserController {
     return await this.getUserDetailService.getUserDetail(user_email);
   }
 
-  // @Public()
+  // Delete User
+  @ApiOperation({ summary: 'For Delete User' }) // Operation description
+  @ApiResponse({
+    status: 200,
+    description: 'Delete user',
+    type: [DeleteUserDto],
+  }) // Document the response
   @Delete('deleteUser')
   async deleteUser(
     @Query('user_email') user_email: string,
@@ -89,6 +132,13 @@ export class UserController {
     return await this.deleteService.deleteUser(user_email);
   }
 
+  // For Refresh token
+  @ApiOperation({ summary: 'For Refresh token' }) // Operation description
+  @ApiResponse({
+    status: 200,
+    description: 'Refresh Token',
+    type: [RefreshUserDto],
+  }) // Document the response
   @Public()
   @Post('refresh')
   async refresh(@Body('refresh_token') refresh_token: string) {

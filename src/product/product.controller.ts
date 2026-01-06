@@ -17,7 +17,7 @@ import type { ProductUpdateInterface } from './interfaces/productsUpdate.interfa
 import type { ProductDeleteInterface } from './interfaces/productsDelete.interface';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
-import { CreateProductDto } from './dto/create-product.dt';
+import { CreateProductDto } from './dto/create-product.dto';
 import { Public } from '../common/decorators/skip.auth';
 import { CreateProductService } from './services/create-product/create-product.service';
 import { UpdateProductService } from './services/update-product/update-product.service';
@@ -26,6 +26,9 @@ import { GetProductService } from './services/get-product/get-product.service';
 import { GetSortedProductService } from './services/get-sorted-product/get-sorted-product.service';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '../common/enum/role.enum';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { DeleteOrderDto } from '../order/dto/delete.order.dto';
 
 @Controller('product')
 export class ProductController {
@@ -39,6 +42,12 @@ export class ProductController {
   ) {}
 
   // For Get all product
+
+  @ApiOperation({ summary: 'Get Product List' }) // Operation description
+  @ApiResponse({
+    status: 200,
+    description: 'Product List',
+  }) // Document the response
   @Public()
   @Get()
   getProduct(): Promise<Product[]> {
@@ -46,6 +55,12 @@ export class ProductController {
   }
 
   // For getting Categor wise Product
+
+  @ApiOperation({ summary: 'Get Product Based On Category' }) // Operation description
+  @ApiResponse({
+    status: 200,
+    description: 'Product Based on Category',
+  }) // Document the response
   @Public()
   @Get(':category')
   async getSelectedProduct(
@@ -64,9 +79,16 @@ export class ProductController {
 
   // For Add new Product
   // @Public()
+
+  @ApiOperation({ summary: 'Add Product' }) // Operation description
+  @ApiResponse({
+    status: 200,
+    description: 'Add Product Only For role = "admin" ',
+    type: [CreateProductDto],
+  }) // Document the response
   @Roles(Role.admin)
   @Post('create')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('product_images'))
   async addNewProduct(
     @Body(new ValidationPipe()) product: CreateProductDto,
     @UploadedFile() file: Express.Multer.File,
@@ -87,7 +109,12 @@ export class ProductController {
   }
 
   // For Updating Product
-
+  @ApiOperation({ summary: 'Update Product' }) // Operation description
+  @ApiResponse({
+    status: 200,
+    description: 'Update Product Only For role = "admin" ',
+    type: [UpdateProductDto],
+  }) // Document the response
   @Roles(Role.admin)
   @Put('update')
   async updateProductContoller(
@@ -98,6 +125,12 @@ export class ProductController {
 
   // For delete A  Product
 
+  @ApiOperation({ summary: 'Delete Product' }) // Operation description
+  @ApiResponse({
+    status: 200,
+    description: 'Delete Product Only For role = "admin" ',
+    type: [DeleteOrderDto],
+  }) // Document the response
   @Roles(Role.admin)
   @Delete('delete')
   async deleteProductController(
