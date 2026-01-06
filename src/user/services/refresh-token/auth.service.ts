@@ -1,36 +1,57 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../../user.service';
-import bcrypt from 'bcrypt';
-import dotenv from 'dotenv';
-dotenv.config();
+import * as bcrypt from 'bcrypt';
+
+export interface JwtPayload {
+  sub: string;
+  roles: string[];
+}
 
 @Injectable()
 export class AuthService {
   constructor(
-    private jwtService: JwtService,
-    private userService: UserService,
+    private readonly jwtService: JwtService,
+    private readonly userService: UserService,
   ) {}
 
-  async generateAccessToken(payload: any) {
+  // 🔐 ACCESS TOKEN (Bearer)
+  async generateAccessToken(payload: JwtPayload): Promise<string> {
     return this.jwtService.signAsync(payload, {
       secret: process.env.JWT_ACCESS_SECRET,
       expiresIn: '15m',
     });
   }
 
-  async generateRefreshToken(payload: any) {
+  // 🔄 REFRESH TOKEN
+  async generateRefreshToken(payload: JwtPayload): Promise<string> {
     return this.jwtService.signAsync(payload, {
       secret: process.env.JWT_REFRESH_SECRET,
       expiresIn: '7d',
     });
   }
 
-  async saveRefreshToken(user_email: string, refreshToken: string) {
-    const hashed = await bcrypt.hash(refreshToken, 10);
+  // 💾 Store hashed refresh token
+  async saveRefreshToken(
+    userEmail: string,
+    refreshToken: string,
+  ): Promise<void> {
+    const hashedToken = await bcrypt.hash(refreshToken, 10);
+
     await this.userService.updateUser({
-      user_email: user_email,
-      refresh_token: hashed,
+      user_email: userEmail,
+      refresh_token: hashedToken,
     });
+  }
+
+  // 🔍 Validate refresh token
+  async validateRefreshToken(
+    userEmail: string,
+    refreshToken: string,
+  ): Promise<boolean> {
+    const user = await this.userService.findUser(userEmail);
+    if (!user || !user.refresh_token) return false;
+
+    return bcrypt.compare(refreshToken, user.refresh_token);
   }
 }

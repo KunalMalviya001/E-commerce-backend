@@ -27,11 +27,17 @@ import { GetUserInterface } from './interface/getUser.interface';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 import { AuthService } from './services/refresh-token/auth.service';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { GetUserDto } from './dto/get-user.dto';
 import { DeleteUserDto } from './dto/delete.user.dto';
 import { RefreshUserDto } from './dto/refreshToken.dto';
 
+@ApiBearerAuth('access-token')
 @ApiTags('user')
 @Controller('user')
 export class UserController {

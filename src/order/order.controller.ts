@@ -5,11 +5,18 @@ import { CreateOrderService } from './services/create-order/create-order.service
 import { DeleteOrderService } from './services/delete-order/delete-order.service';
 import { GetOrderService } from './services/get-order/get-order.service';
 import { UpdateOrderService } from './services/update-order/update-order.service';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { DeleteOrderDto } from './dto/delete.order.dto';
 import { AddOrderDto } from './dto/add.order.dto';
 import { GetOrderDto } from './dto/get.order.dto';
 
+@ApiBearerAuth('access-token')
+@ApiTags('Product')
 @Controller('order')
 export class OrderController {
   constructor(

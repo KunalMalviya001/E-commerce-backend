@@ -24,10 +24,17 @@ import { GetProductService } from './services/get-product/get-product.service';
 import { GetSortedProductService } from './services/get-sorted-product/get-sorted-product.service';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '../common/enum/role.enum';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { DeleteProductDto } from './dto/delete-product.dto';
 
+@ApiBearerAuth('access-token')
+@ApiTags('Product')
 @Controller('product')
 export class ProductController {
   constructor(
@@ -90,17 +97,25 @@ export class ProductController {
   async addNewProduct(
     @Body(new ValidationPipe()) product: CreateProductDto,
     @UploadedFile() file: Express.Multer.File,
-  ): Promise<Product[]> {
+  ): Promise<string> {
     try {
-      const uploadImage = await this.cloudinaryService.uploadImage(file);
+      if (file) {
+        const uploadImage = await this.cloudinaryService.uploadImage(file);
 
-      product.product_images = uploadImage?.secure_url
-        ? [uploadImage.secure_url]
-        : [];
-
-      return await this.createProductService.addProduct(
+        product.product_images = uploadImage?.secure_url
+          ? [uploadImage.secure_url]
+          : [];
+      }
+      if (!product.product_images) {
+        throw new ConflictException('Product creation failed');
+      }
+      const addProduct = await this.createProductService.addProduct(
         product as ProductInterface,
       );
+      if (addProduct.length > 0) {
+        return 'product Added';
+      }
+      return 'product Not Add';
     } catch {
       throw new ConflictException('Product creation failed');
     }
