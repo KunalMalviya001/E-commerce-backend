@@ -5,10 +5,13 @@ import { Connection } from 'mongoose';
 import { UserModule } from './user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './common/guards/auth.guard';
 import dotenv from 'dotenv';
 import { OrderModule } from './order/order.module';
+import { AuthGuard } from './common/guards/auth.guard';
+import { RolesGuard } from './common/guards/roles.guard';
+
 dotenv.config();
+
 @Module({
   imports: [
     MongooseModule.forRoot(
@@ -20,7 +23,6 @@ dotenv.config();
           connection.on('disconnected', () => console.log('disconnected'));
           connection.on('reconnected', () => console.log('reconnected'));
           connection.on('disconnecting', () => console.log('disconnecting'));
-
           return connection;
         },
       },
@@ -34,11 +36,14 @@ dotenv.config();
     ProductModule,
     OrderModule,
   ],
-  controllers: [],
   providers: [
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })

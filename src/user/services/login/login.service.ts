@@ -27,7 +27,7 @@ export class LoginService {
       if (isPass) {
         const payload = {
           sub: user.user_email,
-          roles: user.roles,
+          roles: isUser.roles,
           username: user.user_name,
         };
 
