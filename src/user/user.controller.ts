@@ -81,7 +81,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Register user',
-    type: [LoginUserDto],
+    type: [RegisterUserDto],
   }) // Document the response
   @Public()
   @Post('registerUser')
@@ -141,7 +141,7 @@ export class UserController {
   }) // Document the response
   @Public()
   @Post('refresh')
-  async refresh(@Body() refresh_token: RefreshUserDto) {
+  async refresh(@Query('refresh_token') refresh_token: RefreshUserDto) {
     if (!refresh_token.refresh_token) {
       throw new UnauthorizedException();
     }
