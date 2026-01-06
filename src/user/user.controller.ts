@@ -141,7 +141,7 @@ export class UserController {
   }) // Document the response
   @Public()
   @Post('refresh')
-  async refresh(@Body('refresh_token') refresh_token: RefreshUserDto) {
+  async refresh(@Body() refresh_token: RefreshUserDto) {
     if (!refresh_token.refresh_token) {
       throw new UnauthorizedException();
     }

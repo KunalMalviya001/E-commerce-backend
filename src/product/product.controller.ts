@@ -134,7 +134,7 @@ export class ProductController {
   @Roles(Role.admin)
   @Delete('delete')
   async deleteProductController(
-    @Body() product: ProductDeleteInterface,
+    @Query() product: ProductDeleteInterface,
   ): Promise<string> {
     return this.deleteProductService.deleteProduct(product);
   }

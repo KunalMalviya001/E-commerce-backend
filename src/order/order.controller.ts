@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 // import { Public } from '../common/decorators/skip.auth';
 import { GetOrderInterface } from './interface/get-order.interface';
 import { CreateOrderService } from './services/create-order/create-order.service';
@@ -57,9 +57,7 @@ export class OrderController {
     type: [DeleteOrderDto],
   }) // Document the response
   @Delete('delete')
-  async deleteOreder(
-    @Body('user_email') orders: DeleteOrderDto,
-  ): Promise<string | Error> {
+  async deleteOreder(@Query() orders: DeleteOrderDto): Promise<string | Error> {
     return this.deleteOrderService.deleteOrder(orders);
   }
 
@@ -73,7 +71,7 @@ export class OrderController {
   }) // Document the response
   @Get('view')
   async getOreder(
-    @Body('user_email') user_email: GetOrderDto,
+    @Query() user_email: GetOrderDto,
   ): Promise<GetOrderInterface | Error | string> {
     return this.getOrderService.viewOrder(user_email.user_email);
   }
