@@ -10,8 +10,7 @@ export class AddOrderDto {
 
   @ApiProperty({
     description: 'Enter Product ObjectID',
-    example:
-      '{ "items": "6956513c3c6841499cc287a7",  "user_email": "tapan@gmail.com" }',
+    example: '"6956513c3c6841499cc287a7"',
   })
   items: Product[];
 }
